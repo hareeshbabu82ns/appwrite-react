@@ -26,10 +26,10 @@ const generateTheme = ( mode ) => {
   return theme;
 };
 
-function ThemedApp() {
-  const themeState = useSelector( ( state ) => state.theme );
+export function ThemedApp() {
+  const themeMode = useSelector( ( state ) => state.theme.mode );
 
-  const theme = useMemo( () => generateTheme( themeState.mode ), [ themeState.mode ] );
+  const theme = useMemo( () => generateTheme( themeMode ), [ themeMode ] );
 
   return (
     <ThemeProvider theme={theme}>
