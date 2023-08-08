@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
-import { login } from "../appwrite";
+import appwriteApi from "../api/api";
+
+// import { login } from "../appwrite";
 // import { loginWith } from "../hooks";
 
 export default function LogIn() {
@@ -20,7 +22,7 @@ export default function LogIn() {
       return;
     }
 
-    login( email, password )
+    appwriteApi.login( email, password )
       .then( ( account ) => alert( `Successfully logged in from: ${account.osName}` ) )
       .finally( () => navigate( '/' ) )
   }

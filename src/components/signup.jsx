@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { register } from "../appwrite";
+import appwriteApi from "../api/api";
 
 export default function SignUp() {
   const [ email, setEmail ] = useState();
@@ -22,7 +22,7 @@ export default function SignUp() {
       return;
     }
 
-    register( email, password ).then( ( account ) => alert( `Successfully created account with ID: ${account.$id}` ) )
+    appwriteApi.register( email, password ).then( ( account ) => alert( `Successfully created account with ID: ${account.$id}` ) )
   }
 
   return (

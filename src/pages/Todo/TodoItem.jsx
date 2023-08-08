@@ -1,39 +1,20 @@
-import api from "../../api/api";
-import { Server } from "../../utils/config";
+import { useDispatch } from "react-redux";
 import { deleteButton } from "../icons";
+import { deleteTodo, updateTodo } from "../../state/todosSlice";
 
-const TodoItem = ( { item, setStale } ) => {
+const TodoItem = ( { item } ) => {
+
+  const dispatch = useDispatch()
+
   const handleComplete = async ( e, item ) => {
-    // console.log('Marking Todo as complete');
     let data = {
       isComplete: !item[ "isComplete" ],
     };
-    try {
-      // console.log(item);
-      await api.updateDocument(
-        Server.todosDB,
-        Server.todosCollection,
-        item[ "$id" ],
-        data
-      );
-      setStale( { stale: true } );
-    } catch ( e ) {
-      console.error( "Error in marking todo as complete" );
-    }
+    dispatch( updateTodo( { id: item[ "$id" ], data } ) )
   };
 
   const handleDelete = async ( e, item ) => {
-    // console.log('Deleting Todo');
-    try {
-      await api.deleteDocument(
-        Server.todosDB,
-        Server.todosCollection,
-        item[ "$id" ]
-      );
-      setStale( { stale: true } );
-    } catch ( e ) {
-      console.error( "Error in deleting todo" );
-    }
+    dispatch( deleteTodo( item[ "$id" ] ) )
   };
 
   return (
