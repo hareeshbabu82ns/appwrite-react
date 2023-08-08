@@ -1,7 +1,24 @@
-import { Outlet, Link } from "react-router-dom"
+import { Outlet, Link, useNavigate } from "react-router-dom"
 import appwriteLogo from "/src/assets/react.svg"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchUser, logout } from "../state/usersSlice"
 
 export default function Layout() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const user = useSelector( ( state ) => state.users.user )
+  const userStatus = useSelector( ( state ) => state.users.status )
+  const error = useSelector( ( state ) => state.users.error )
+
+  useEffect( () => {
+    if ( userStatus === 'idle' ) {
+      dispatch( fetchUser() )
+    }
+  }, [ userStatus, dispatch, navigate ] )
+
+  const handleLogOut = () => dispatch( logout() ).then( () => navigate( '/login' ) )
+
   return (
     <main>
       <nav>
@@ -9,12 +26,29 @@ export default function Layout() {
           <li>
             <Link to="/">Home</Link>
           </li>
-          <li>
-            <Link to="/login">Log In</Link>
-          </li>
-          <li>
-            <Link to="/signup">Sign Up</Link>
-          </li>
+
+          {user && (
+            <>
+              <li>
+                <Link to="/todos">Todos</Link>
+              </li>
+              <li>
+                <Link onClick={handleLogOut}>Log Out</Link>
+              </li>
+            </>
+          )}
+
+          {!user && (
+            <>
+              <li>
+                <Link to="/login">Log In</Link>
+              </li>
+              <li>
+                <Link to="/signup">Sign Up</Link>
+              </li>
+            </>
+          )}
+
         </ul>
       </nav>
 

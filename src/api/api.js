@@ -43,9 +43,9 @@ let api = {
     }
   },
 
-  register: async (email, password) => {
+  register: async (email, password, name) => {
     try {
-      return api.provider().account.create("unique()", email, password);
+      return api.provider().account.create("unique()", email, password, name);
     } catch (error) {
       throw new Error(error.message);
     }

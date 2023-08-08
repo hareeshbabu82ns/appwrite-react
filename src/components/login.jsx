@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
-import appwriteApi from "../api/api";
+// import appwriteApi from "../api/api";
+import { login } from "../state/usersSlice";
+import { useDispatch } from "react-redux";
 
 // import { login } from "../appwrite";
 // import { loginWith } from "../hooks";
 
 export default function LogIn() {
+  const dispatch = useDispatch()
   const [ email, setEmail ] = useState();
   const [ password, setPassword ] = useState();
   const navigate = useNavigate()
@@ -22,9 +25,7 @@ export default function LogIn() {
       return;
     }
 
-    appwriteApi.login( email, password )
-      .then( ( account ) => alert( `Successfully logged in from: ${account.osName}` ) )
-      .finally( () => navigate( '/' ) )
+    dispatch( login( { email, password } ) ).then( () => navigate( '/' ) ).error( e => console.error( e ) )
   }
 
   return (

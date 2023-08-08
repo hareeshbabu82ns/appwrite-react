@@ -3,12 +3,13 @@ import { useGetFiles, useGetUser } from "../hooks";
 import api from "../api/api";
 import { useState } from "react";
 import { Server } from "../utils/config";
+import { useSelector } from "react-redux";
 
 
 export default function Home() {
   const navigate = useNavigate()
 
-  const [ { user } ] = useGetUser();
+  const user = useSelector( ( state ) => state.users.user )
   const [ stale, setStale ] = useState( { stale: false } );
   const [ { files, isLoading, isError } ] = useGetFiles( stale );
 

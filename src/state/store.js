@@ -4,6 +4,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import globalReducer from "./index";
 import themeReducer from "./themeSlice";
 import todosReducer from "./todosSlice";
+import usersReducer from "./usersSlice";
 import { api } from "./api";
 
 const store = configureStore({
@@ -11,6 +12,7 @@ const store = configureStore({
     global: globalReducer,
     theme: themeReducer,
     todos: todosReducer,
+    users: usersReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefault) => getDefault().concat(api.middleware),
