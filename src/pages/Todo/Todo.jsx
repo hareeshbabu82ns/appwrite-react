@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addTodo, fetchTodos, selectAllTodos } from "../../state/todosSlice";
 
 const Todo = () => {
-  const [ { user } ] = useGetUser();
+  // const [ { user } ] = useGetUser();
+  const user = useSelector( ( state ) => state.users.user )
   const [ currentTodo, setCurrentTodo ] = useState( "" );
 
   const dispatch = useDispatch()

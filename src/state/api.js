@@ -4,6 +4,12 @@ import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: Server.endpoint || "/",
+  credentials: "include",
+  prepareHeaders: (headers, { getState }) => {
+    headers.set("Content-Type", "application/json");
+    headers.set("X-Appwrite-Project", Server.project);
+    return headers;
+  },
 });
 
 const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
@@ -14,7 +20,7 @@ export const api = createApi({
   tagTypes: ["User"],
   endpoints: (build) => ({
     getUser: build.query({
-      query: (id) => `api/general/user/${id}`,
+      query: () => `/account`,
       providesTags: ["User"],
     }),
     userGoogleSignin: build.mutation({
@@ -28,7 +34,7 @@ export const api = createApi({
     }),
     userSignin: build.mutation({
       query: ({ email, password }) => ({
-        url: `api/user/signin`,
+        url: `/account/sessions/email`,
         method: "POST",
         body: { email, password },
       }),
@@ -36,10 +42,10 @@ export const api = createApi({
       invalidatesTags: ["User"],
     }),
     userSignup: build.mutation({
-      query: ({ firstName, lastName, email, password }) => ({
-        url: `api/user/signup`,
+      query: ({ name, email, password }) => ({
+        url: `/account`,
         method: "POST",
-        body: { firstName, lastName, email, password },
+        body: { name, email, password, userId: "unique()" },
       }),
       providesTags: ["Signup"],
       invalidatesTags: ["User"],
@@ -47,4 +53,5 @@ export const api = createApi({
   }),
 });
 
-export const { useGetUserQuery } = api;
+export const { useGetUserQuery, useUserSigninMutation, useUserSignupMutation } =
+  api;

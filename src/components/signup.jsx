@@ -2,12 +2,15 @@ import { useState } from "react";
 // import appwriteApi from "../api/api";
 import { register } from "../state/usersSlice";
 import { useDispatch } from "react-redux";
+import { useUserSignupMutation } from "../state/api";
 
 export default function SignUp() {
   const dispatch = useDispatch()
   const [ name, setName ] = useState();
   const [ email, setEmail ] = useState();
   const [ password, setPassword ] = useState();
+
+  const [ userSignup, { isLoading, isError, isSuccess } ] = useUserSignupMutation()
 
   const handleSubmit = ( event ) => {
     event.preventDefault();
@@ -31,7 +34,8 @@ export default function SignUp() {
       return;
     }
 
-    dispatch( register( { email, password, name } ) ).then( ( account ) => alert( `Successfully created account with ID: ${account.$id}` ) )
+    // dispatch( register( { email, password, name } ) ).then( ( account ) => alert( `Successfully created account with ID: ${account.$id}` ) )
+    userSignup( { email, password, name } ).then( ( account ) => alert( `Successfully created account with ID: ${account.$id}` ) )
   }
 
   return (

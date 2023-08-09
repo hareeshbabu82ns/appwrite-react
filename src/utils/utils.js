@@ -1,3 +1,16 @@
+/// AppWrite Session
+export const loadAppWriteCookieLocal = () => {
+  const key = localStorage.getItem("cookieFallback");
+  if (key) {
+    const fallback = JSON.parse(localStorage.getItem("cookieFallback"));
+    const cookieKey = Object.keys(fallback).find((key) =>
+      key.startsWith("a_session_")
+    );
+    if (cookieKey) return `${cookieKey}=${fallback[cookieKey]}`;
+  }
+  return "";
+};
+
 /// Theme
 const initThemeState = {
   mode: "dark",

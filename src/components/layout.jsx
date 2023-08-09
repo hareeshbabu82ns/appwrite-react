@@ -3,11 +3,14 @@ import appwriteLogo from "/src/assets/react.svg"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchUser, logout } from "../state/usersSlice"
+import { useGetUserQuery } from "../state/api"
 
 export default function Layout() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const user = useSelector( ( state ) => state.users.user )
+
+  const { data: user } = useGetUserQuery();
+  // const user = useSelector( ( state ) => state.users.user )
   const userStatus = useSelector( ( state ) => state.users.status )
   const error = useSelector( ( state ) => state.users.error )
 
