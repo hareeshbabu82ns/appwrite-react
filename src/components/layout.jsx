@@ -1,26 +1,15 @@
 import { Outlet, Link, useNavigate } from "react-router-dom"
 import appwriteLogo from "/src/assets/react.svg"
-import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchUser, logout } from "../state/usersSlice"
-import { useGetUserQuery } from "../state/api"
+import { logout } from "../state/authSlice"
 
 export default function Layout() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { data: user } = useGetUserQuery();
-  // const user = useSelector( ( state ) => state.users.user )
-  const userStatus = useSelector( ( state ) => state.users.status )
-  const error = useSelector( ( state ) => state.users.error )
+  const isLoggedIn = useSelector( ( state ) => state.auth.userId );
 
-  useEffect( () => {
-    if ( userStatus === 'idle' ) {
-      dispatch( fetchUser() )
-    }
-  }, [ userStatus, dispatch, navigate ] )
-
-  const handleLogOut = () => dispatch( logout() ).then( () => navigate( '/login' ) )
+  const handleLogOut = () => dispatch( logout() ).then( () => navigate( '/auth/login' ) )
 
   return (
     <main>
@@ -30,7 +19,7 @@ export default function Layout() {
             <Link to="/">Home</Link>
           </li>
 
-          {user && (
+          {isLoggedIn && (
             <>
               <li>
                 <Link to="/todos">Todos</Link>
@@ -41,7 +30,7 @@ export default function Layout() {
             </>
           )}
 
-          {!user && (
+          {!isLoggedIn && (
             <>
               <li>
                 <Link to="/login">Log In</Link>

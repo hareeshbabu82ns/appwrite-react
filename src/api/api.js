@@ -27,7 +27,7 @@ let api = {
     return api.sdk;
   },
 
-  login: async (email, password) => {
+  login: async ({ email, password } = {}) => {
     try {
       return api.provider().account.createEmailSession(email, password);
     } catch (error) {
@@ -35,15 +35,17 @@ let api = {
     }
   },
 
-  logout: async () => {
+  logout: async ({ sessionId, userId } = {}) => {
     try {
-      return api.provider().account.deleteSession("current");
+      if (sessionId) await api.provider().account.deleteSession(sessionId);
+      else if (userId) await api.provider().account.deleteSessions(userId);
+      else api.provider().account.deleteSession("current");
     } catch (error) {
       throw new Error(error.message);
     }
   },
 
-  register: async (email, password, name) => {
+  register: async ({ email, password, name }) => {
     try {
       return api.provider().account.create("unique()", email, password, name);
     } catch (error) {
