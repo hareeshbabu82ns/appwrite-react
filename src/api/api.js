@@ -135,16 +135,22 @@ let api = {
 
   // Documents API
 
-  createDocument: (databaseId, collectionId, data, permissions) => {
+  createDocument: (databaseId, collectionId, documentId, data, permissions) => {
     return api
       .provider()
       .database.createDocument(
         databaseId,
         collectionId,
-        "unique()",
+        documentId || "unique()",
         data,
         permissions
       );
+  },
+
+  getDocument: (databaseId, collectionId, documentId) => {
+    return api
+      .provider()
+      .database.getDocument(databaseId, collectionId, documentId);
   },
 
   listDocuments: (databaseId, collectionId) => {

@@ -1,29 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TodoItem from "./TodoItem";
-import { useDispatch, useSelector } from "react-redux";
-import { addTodo, fetchTodos, selectAllTodos } from "../../state/todosSlice";
+import { useDispatch } from "react-redux";
 import PageContainer from "../../components/container/PageContainer";
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { Box } from "@mui/material";
 import Header from "../../components/Header";
-import { userDataSelector } from "../../state/authSlice";
+import { addTodoApi, useAddTodoMutation, useGetTodosQuery } from "../../state/todosApi";
 
 const Todo = () => {
-  // const user = useSelector( userIdSelector )
-  const user = useSelector( userDataSelector );
   const [ currentTodo, setCurrentTodo ] = useState( "" );
 
   const dispatch = useDispatch()
-  const todos = useSelector( selectAllTodos )
 
-  const todoStatus = useSelector( ( state ) => state.todos.status )
-  const error = useSelector( ( state ) => state.todos.error )
-
-  useEffect( () => {
-    if ( todoStatus === 'idle' ) {
-      dispatch( fetchTodos() )
-    }
-  }, [ todoStatus, dispatch ] )
+  const { data: todos, isLoading, isError, error } = useGetTodosQuery();
+  const [ addTodoMutation ] = useAddTodoMutation()
 
   const handleAddTodo = async ( e ) => {
     e.preventDefault();
@@ -33,23 +23,21 @@ const Todo = () => {
       isComplete: false,
     };
     // console.log(data, user);
-    dispatch( addTodo( { data, user } ) )
+    dispatch( addTodoApi( { data, addTodoMutation } ) )
     setCurrentTodo( "" );
   };
 
 
-  if ( !user ) return <p>You aren't logged in.</p>
-
   let content
 
-  if ( todoStatus === 'loading' ) {
+  if ( isLoading ) {
     content = <p>Loading...</p>
-  } else if ( todoStatus === 'succeeded' ) {
+  } else if ( isError ) {
+    content = <div>{error}</div>
+  } else if ( todos ) {
     content = todos.map( ( item ) => (
       <TodoItem key={item[ "$id" ]} item={item} />
     ) )
-  } else if ( todoStatus === 'failed' ) {
-    content = <div>{error}</div>
   }
 
   return (
@@ -61,7 +49,6 @@ const Todo = () => {
             <form onSubmit={handleAddTodo}>
               <input
                 type="text"
-                className="w-full my-8 px-6 py-4 text-xl rounded-lg border-0 focus:ring-2 focus:ring-gray-800 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:scale-110 hover:shadow-xl shadow-md"
                 placeholder="🤔   What to do today?"
                 value={currentTodo}
                 onChange={( e ) => setCurrentTodo( e.target.value )}

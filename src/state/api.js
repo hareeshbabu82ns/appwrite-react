@@ -1,5 +1,4 @@
 import { Server } from "../utils/config";
-
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({

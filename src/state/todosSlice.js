@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../api/api";
 import { Server } from "../utils/config";
 import { Permission, Role } from "appwrite";
+import { userIdSelector } from "./authSlice";
 
 const initialState = {
   todos: [],
@@ -19,15 +20,15 @@ export const fetchTodos = createAsyncThunk("todos/fetchTodos", async () => {
 
 export const addTodo = createAsyncThunk(
   "todos/addTodo",
-  async ({ data, user }) => {
+  async ({ content, isComplete }, { getState }) => {
+    const state = getState();
+    const userId = userIdSelector(state);
     const response = await api.createDocument(
       Server.todosDB,
       Server.todosCollection,
-      data,
-      [
-        Permission.read(Role.user(user["$id"])),
-        Permission.write(Role.user(user["$id"])),
-      ]
+      null,
+      { content, isComplete, userId },
+      [Permission.read(Role.user(userId)), Permission.write(Role.user(userId))]
     );
     return response;
   }

@@ -2,9 +2,9 @@ import { useState } from "react";
 // import appwriteApi from "../api/api";
 import { toast } from 'react-toastify';
 import { useDispatch } from "react-redux";
-import { useUserSignupMutation } from "../state/api";
+import { register } from "../state/authSlice";
 import PageContainer from "./container/PageContainer";
-import { Avatar, Box, Button, Card, Checkbox, FormControlLabel, Grid, Link, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, Grid, Link, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -20,8 +20,6 @@ export default function SignUp() {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const [ searchParams ] = useSearchParams();
-
-  const [ userSignup, { isLoading, isError, isSuccess } ] = useUserSignupMutation()
 
   const [ formData, setFormData ] = useState( initFormData );
 
@@ -46,7 +44,7 @@ export default function SignUp() {
 
     const toastId = toast.loading( 'Signing up...', { toastId: 'signup-action' } );
     try {
-      const payload = await userSignup( { email: formData.email, password: formData.password, name: `${formData.firstName} ${formData.lastName}` } ).unwrap();
+      const payload = await dispatch( register( { email: formData.email, password: formData.password, name: `${formData.firstName} ${formData.lastName}` } ) ).unwrap();
       // dispatch( setUser( payload ) );
       // console.log( 'signup successful', payload )
       toast.update( toastId, {
@@ -67,32 +65,6 @@ export default function SignUp() {
       // dispatch( setUser( null ) );
     }
   };
-
-  // const handleSubmit = ( event ) => {
-  //   event.preventDefault();
-  //   if ( !name ) {
-  //     alert( 'Name is required.' )
-  //     return;
-  //   }
-
-  //   if ( !email ) {
-  //     alert( 'Email is required.' )
-  //     return;
-  //   }
-
-  //   if ( !password ) {
-  //     alert( 'Password is required.' )
-  //     return;
-  //   }
-
-  //   if ( password.length < 8 ) {
-  //     alert( 'Password must be at least 8 characters long.' )
-  //     return;
-  //   }
-
-  //   // dispatch( register( { email, password, name } ) ).then( ( account ) => alert( `Successfully created account with ID: ${account.$id}` ) )
-  //   userSignup( { email, password, name } ).then( ( account ) => alert( `Successfully created account with ID: ${account.$id}` ) )
-  // }
 
   return (
     <PageContainer title="Register" description="this is Register page">
