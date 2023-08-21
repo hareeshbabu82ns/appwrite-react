@@ -1,18 +1,19 @@
-import { Link } from 'react-router-dom';
-import { Typography, styled } from '@mui/material';
-
-const LinkStyled = styled( Link )( () => ( {
-  paddingTop: 15,
-  height: '70px',
-  overflow: 'hidden',
-  display: 'block',
-} ) );
+import { Box, Typography, useTheme } from '@mui/material';
+import { AppBarStyled, ToolbarStyled } from '../../header/Header';
+import logo from "/src/assets/react.svg";
 
 const Logo = () => {
+  const theme = useTheme();
   return (
-    <LinkStyled to="/">
-      <Typography variant="h4">AppWrite</Typography>
-    </LinkStyled>
+    <AppBarStyled position="sticky" color="default" elevation={0}>
+      <ToolbarStyled sx={{ alignItems: "center" }}>
+        <img src={logo} alt="MUI Logo" />
+        <Box sx={{ width: 16 }} />
+        <Typography variant="h4" color={theme.palette.tertiary.main}>
+          AppWrite
+        </Typography>
+      </ToolbarStyled>
+    </AppBarStyled>
   );
 };
 

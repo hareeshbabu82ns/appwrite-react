@@ -12,10 +12,11 @@ import {
   designTokensDark,
   themedComponentsLight,
   themedComponentsDark,
-} from "./utils/theme.jsx";
+} from "./utils/theme.js";
 import { useSelector } from "react-redux";
 import store from './state/store';
 
+import './main.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 const generateTheme = ( mode ) => {

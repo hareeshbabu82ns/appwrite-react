@@ -1,15 +1,14 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 // mui imports
 import { ListItemIcon, List, styled, ListItemText, useTheme, ListItemButton } from '@mui/material';
 
-const NavItem = ({ item, level, pathDirect, onClick }) => {
+const NavItem = ( { item, level, pathDirect, onClick } ) => {
   const Icon = item.icon;
   const theme = useTheme();
   const itemIcon = <Icon stroke={1.5} size="1.3rem" />;
 
-  const ListItemStyled = styled(ListItemButton)(() => ({
+  const ListItemStyled = styled( ListItemButton )( () => ( {
     whiteSpace: 'nowrap',
     marginBottom: '2px',
     padding: '8px 10px',
@@ -18,18 +17,18 @@ const NavItem = ({ item, level, pathDirect, onClick }) => {
     color: theme.palette.text.secondary,
     paddingLeft: '10px',
     '&:hover': {
-      backgroundColor: theme.palette.primary.light,
-      color: theme.palette.primary.main,
+      // backgroundColor: theme.palette.primary.light,
+      // color: theme.palette.primary.main,
     },
     '&.Mui-selected': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main,
+      // color: 'white',
+      // backgroundColor: theme.palette.primary.main,
       '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
+        // backgroundColor: theme.palette.primary.main,
+        // color: 'white',
       },
     },
-  }));
+  } ) );
 
   return (
     <List component="li" disablePadding key={item.id}>
@@ -63,6 +62,7 @@ NavItem.propTypes = {
   item: PropTypes.object,
   level: PropTypes.number,
   pathDirect: PropTypes.any,
+  onClick: PropTypes.func,
 };
 
 export default NavItem;

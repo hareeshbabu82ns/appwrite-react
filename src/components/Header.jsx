@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from "@mui/material";
-
+import PropTypes from "prop-types";
 function Header( { title, subtitle } ) {
   const theme = useTheme();
 
@@ -19,5 +19,8 @@ function Header( { title, subtitle } ) {
     </Box>
   );
 }
-
+Header.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+};
 export default Header;

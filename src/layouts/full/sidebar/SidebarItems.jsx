@@ -3,8 +3,9 @@ import { useLocation } from 'react-router';
 import { Box, List } from '@mui/material';
 import NavItem from './NavItem';
 import NavGroup from './NavGroup/NavGroup.jsx';
+import PropTypes from 'prop-types';
 
-const SidebarItems = () => {
+const SidebarItems = ( { onSidebarClose } ) => {
   const { pathname } = useLocation();
   const pathDirect = pathname;
 
@@ -19,11 +20,15 @@ const SidebarItems = () => {
             // {/********If Sub Menu**********/}
             /* eslint no-else-return: "off" */
           } else {
-            return <NavItem item={item} key={item.id} pathDirect={pathDirect} />;
+            return <NavItem item={item} key={item.id} pathDirect={pathDirect} onClick={onSidebarClose} />;
           }
         } )}
       </List>
     </Box>
   );
+};
+
+SidebarItems.propTypes = {
+  onSidebarClose: PropTypes.func,
 };
 export default SidebarItems;

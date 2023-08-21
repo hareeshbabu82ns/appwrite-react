@@ -1,6 +1,7 @@
 import { useMediaQuery, Box, Drawer } from '@mui/material';
 import Logo from '../shared/logo/Logo.jsx';
 import SidebarItems from './SidebarItems.jsx';
+import PropTypes from 'prop-types';
 
 const Sidebar = ( props ) => {
   const lgUp = useMediaQuery( ( theme ) => theme.breakpoints.up( 'lg' ) );
@@ -77,9 +78,15 @@ const Sidebar = ( props ) => {
       {/* ------------------------------------------- */}
       {/* Sidebar For Mobile */}
       {/* ------------------------------------------- */}
-      <SidebarItems />
+      <SidebarItems onSidebarClose={props.onSidebarClose} />
     </Drawer>
   );
+};
+
+Sidebar.propTypes = {
+  isMobileSidebarOpen: PropTypes.bool,
+  isSidebarOpen: PropTypes.bool,
+  onSidebarClose: PropTypes.func,
 };
 
 export default Sidebar;
