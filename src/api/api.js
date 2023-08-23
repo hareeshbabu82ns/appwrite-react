@@ -187,6 +187,8 @@ let api = {
           ? Query.orderAsc(sort.field)
           : Query.orderDesc(sort.field);
       qs.push(`queries[${qs.length}]=${sortq}`);
+    } else {
+      qs.push(`queries[${qs.length}]=${Query.orderDesc("$updatedAt")}`);
     }
     if (filters) {
       filters.forEach(({ field, operator, value }) => {
