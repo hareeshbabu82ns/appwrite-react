@@ -1,18 +1,17 @@
 import { useState } from "react";
-import TodoItem from "./TodoItem";
 import { useDispatch } from "react-redux";
 import PageContainer from "../../components/container/PageContainer";
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { Box } from "@mui/material";
 import Header from "../../components/Header";
-import { addTodoApi, useAddTodoMutation, useGetTodosQuery } from "../../state/todosApi";
+import { addTodoApi, useAddTodoMutation } from "../../state/todosApi";
+import TodosGrid from "./TodosGrid";
 
 const Todo = () => {
   const [ currentTodo, setCurrentTodo ] = useState( "" );
 
   const dispatch = useDispatch()
 
-  const { data: todos, isLoading, isError, error } = useGetTodosQuery();
   const [ addTodoMutation ] = useAddTodoMutation()
 
   const handleAddTodo = async ( e ) => {
@@ -26,19 +25,6 @@ const Todo = () => {
     dispatch( addTodoApi( { data, addTodoMutation } ) )
     setCurrentTodo( "" );
   };
-
-
-  let content
-
-  if ( isLoading ) {
-    content = <p>Loading...</p>
-  } else if ( isError ) {
-    content = <div>{error}</div>
-  } else if ( todos ) {
-    content = todos.map( ( item ) => (
-      <TodoItem key={item[ "$id" ]} item={item} />
-    ) )
-  }
 
   return (
     <PageContainer title="Tasks" description="tasks to do">
@@ -56,7 +42,7 @@ const Todo = () => {
             </form>
           </Grid>
           <Grid xs={12}>
-            {content}
+            <TodosGrid />
           </Grid>
         </Grid>
       </Box>

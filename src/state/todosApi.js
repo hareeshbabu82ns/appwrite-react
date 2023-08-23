@@ -1,17 +1,28 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Server } from "../utils/config";
 import { api } from "./api";
+import appwriteApi from "../api/api";
 import { userIdSelector } from "./authSlice";
-import { Permission, Role } from "appwrite";
+import { Permission, Query, Role } from "appwrite";
 
 export const todosApiSlice = api.injectEndpoints({
   endpoints: (builder) => ({
     getTodos: builder.query({
-      query: () =>
-        `/databases/${Server.todosDB}/collections/${Server.todosCollection}/documents`,
-      transformResponse: (data) => {
-        return data?.documents || [];
+      query: ({ offset, pageSize, sort, filters } = {}) => {
+        const qs = appwriteApi.prepareQueryFilters({
+          offset,
+          pageSize,
+          sort,
+          filters,
+        });
+        const q = qs.length > 0 ? `?${qs.join("&")}` : "";
+        return {
+          url: `/databases/${Server.todosDB}/collections/${Server.todosCollection}/documents${q}`,
+        };
       },
+      // transformResponse: (data) => {
+      //   return data?.documents || [];
+      // },
       providesTags: ["Todos"],
     }),
     addTodo: builder.mutation({
@@ -61,6 +72,19 @@ export const addTodoApi = createAsyncThunk(
         Permission.write(Role.user(userId)),
       ],
     });
+    return response;
+  }
+);
+
+export const queryTodoApi = createAsyncThunk(
+  "todos/queryTodo",
+  async ({ limit, offset } = {}) => {
+    console.log(limit);
+    const response = await appwriteApi.listDocuments(
+      Server.todosDB,
+      Server.todosCollection,
+      [Query.limit(limit), Query.offset(offset)]
+    );
     return response;
   }
 );

@@ -6,6 +6,7 @@ import {
   Account,
   Permission,
   Role,
+  Query,
 } from "appwrite";
 import { Server } from "../utils/config";
 
@@ -153,8 +154,10 @@ let api = {
       .database.getDocument(databaseId, collectionId, documentId);
   },
 
-  listDocuments: (databaseId, collectionId) => {
-    return api.provider().database.listDocuments(databaseId, collectionId);
+  listDocuments: (databaseId, collectionId, queries = []) => {
+    return api
+      .provider()
+      .database.listDocuments(databaseId, collectionId, [...queries]);
   },
 
   updateDocument: (databaseId, collectionId, documentId, data) => {
@@ -167,6 +170,43 @@ let api = {
     return api
       .provider()
       .database.deleteDocument(databaseId, collectionId, documentId);
+  },
+
+  prepareQueryFilters: ({ offset, pageSize, sort, filters }) => {
+    const qs = [];
+    if (pageSize) {
+      qs.push(`queries[${qs.length}]=${Query.limit(pageSize)}`);
+    }
+    if (offset) {
+      qs.push(`queries[${qs.length}]=${Query.offset(offset)}`);
+    }
+    if (sort && sort?.field) {
+      // sort => {field: 'fieldName', sort: 'asc/desc' }
+      const sortq =
+        sort.sort === "asc"
+          ? Query.orderAsc(sort.field)
+          : Query.orderDesc(sort.field);
+      qs.push(`queries[${qs.length}]=${sortq}`);
+    }
+    if (filters) {
+      filters.forEach(({ field, operator, value }) => {
+        switch (operator) {
+          case "contains":
+            qs.push(`queries[${qs.length}]=${Query.search(field, value)}`);
+            break;
+          case "equals":
+            qs.push(`queries[${qs.length}]=${Query.equal(field, value)}`);
+            break;
+          case "isEmpty":
+            qs.push(`queries[${qs.length}]=${Query.isNull(field)}`);
+            break;
+          case "isNotEmpty":
+            qs.push(`queries[${qs.length}]=${Query.isNotNull(field)}`);
+            break;
+        }
+      });
+    }
+    return qs;
   },
 };
 
