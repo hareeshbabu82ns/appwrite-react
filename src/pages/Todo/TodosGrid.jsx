@@ -17,6 +17,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
 import TodoGridToolbar from "./TodoGridToolbar";
+import { useNavigate } from "react-router-dom";
 
 const TodosGrid = () => {
   const [rowModesModel, setRowModesModel] = useState({});
@@ -25,6 +26,7 @@ const TodosGrid = () => {
   const [sort, setSort] = useState({});
   const [filters, setFilters] = useState([]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     data: todos,
@@ -36,6 +38,9 @@ const TodosGrid = () => {
   const [updateTodo] = useUpdateTodoMutation();
   const [deleteTodo] = useDeleteTodoMutation();
 
+  const handleOnNewClicked = () => {
+    navigate("/todos/tasks/new");
+  };
   const handleRowEditStart = (params, event) => {
     event.defaultMuiPrevented = true;
   };
@@ -193,7 +198,11 @@ const TodosGrid = () => {
       }}
       slots={{ toolbar: TodoGridToolbar }}
       slotProps={{
-        toolbar: { onRefetch: refetch, onAddTodo: handleAddTodo },
+        toolbar: {
+          onRefetch: refetch,
+          onAddTodo: handleAddTodo,
+          onNewClicked: handleOnNewClicked,
+        },
       }}
       editMode="row"
       rowModesModel={rowModesModel}
@@ -201,6 +210,7 @@ const TodosGrid = () => {
       onRowEditStart={handleRowEditStart}
       onRowEditStop={handleRowEditStop}
       processRowUpdate={processRowUpdate}
+      onRowDoubleClick={({ id }) => navigate(id)}
     ></StyledDataGrid>
   );
 };

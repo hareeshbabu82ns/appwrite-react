@@ -4,7 +4,7 @@ import api from "../api/api";
 import { Server } from "../utils/config";
 import { logout, userDataSelector } from "../state/authSlice";
 
-import PageContainer from "../components/container/PageContainer";
+import PageContainer from "./PageContainer";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {

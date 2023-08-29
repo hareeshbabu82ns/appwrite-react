@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useDispatch } from "react-redux";
-import { setHeader } from "../../state/globalSlice";
+import { setHeader } from "../state/globalSlice";
 import { Box } from "@mui/material";
 
 const PageContainer = ({ title, description, children, sx }) => {

@@ -25,6 +25,14 @@ export const todosApiSlice = api.injectEndpoints({
       // },
       providesTags: ["Todos"],
     }),
+    getTodo: builder.query({
+      query: (id) => {
+        return {
+          url: `/databases/${Server.todosDB}/collections/${Server.todosCollection}/documents/${id}`,
+        };
+      },
+      providesTags: ["Todo"],
+    }),
     addTodo: builder.mutation({
       query: ({ data, documentId = "unique()", permissions }) => ({
         url: `/databases/${Server.todosDB}/collections/${Server.todosCollection}/documents`,
@@ -53,6 +61,7 @@ export const todosApiSlice = api.injectEndpoints({
 
 export const {
   useGetTodosQuery,
+  useGetTodoQuery,
   useAddTodoMutation,
   useUpdateTodoMutation,
   useDeleteTodoMutation,

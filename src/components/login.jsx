@@ -1,64 +1,74 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom";
 // import appwriteApi from "../api/api";
-import Link from '@mui/material/Link';
+import Link from "@mui/material/Link";
 import { login } from "../state/authSlice";
 import { useDispatch } from "react-redux";
-import PageContainer from "./container/PageContainer";
-import { Avatar, Box, Button, Checkbox, Container, FormControlLabel, Grid, TextField, Typography, useTheme } from "@mui/material";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { toast } from 'react-toastify';
+import PageContainer from "./PageContainer";
+import {
+  Avatar,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { toast } from "react-toastify";
 import Copyright from "./copyright";
 
 // import { login } from "../appwrite";
 // import { loginWith } from "../hooks";
 
 export default function LogIn() {
-  const dispatch = useDispatch()
-  const theme = useTheme()
-  const [ searchParams ] = useSearchParams();
-  const [ email, setEmail ] = useState();
-  const [ password, setPassword ] = useState();
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const [searchParams] = useSearchParams();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const navigate = useNavigate();
 
-  const handleSubmit = ( event ) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    if ( !email ) {
-      toast( 'Email is required.' )
+    if (!email) {
+      toast("Email is required.");
       return;
     }
 
-    if ( !password ) {
-      toast( 'Password is required.' )
+    if (!password) {
+      toast("Password is required.");
       return;
     }
 
-    const toastId = toast.loading( 'Login...', { toastId: 'login-action' } );
-    dispatch( login( { email, password } ) ).then( ( { error } ) => {
-      if ( error ) {
-        toast.update( toastId, {
-          render: 'login failed',
-          type: 'error',
+    const toastId = toast.loading("Login...", { toastId: "login-action" });
+    dispatch(login({ email, password })).then(({ error }) => {
+      if (error) {
+        toast.update(toastId, {
+          render: "login failed",
+          type: "error",
           isLoading: false,
           autoClose: true,
-        } );
-        console.error( error )
+        });
+        console.error(error);
       } else {
-        toast.update( toastId, {
-          render: 'login successful',
-          type: 'success',
+        toast.update(toastId, {
+          render: "login successful",
+          type: "success",
           isLoading: false,
           autoClose: true,
-        } );
-        navigate( searchParams?.get( 'from' ) || '/dashboard' );
+        });
+        navigate(searchParams?.get("from") || "/dashboard");
       }
-    } )
-
-  }
+    });
+  };
 
   const toSignup = () => {
     const params = searchParams.toString();
-    navigate( `/auth/register?${params}` );
+    navigate(`/auth/register?${params}`);
   };
 
   return (
@@ -91,8 +101,12 @@ export default function LogIn() {
             Sign in
           </Typography>
 
-
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -104,7 +118,7 @@ export default function LogIn() {
               autoComplete="email"
               autoFocus
               value={email}
-              onChange={( e ) => setEmail( e.target.value )}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -116,13 +130,18 @@ export default function LogIn() {
               id="password"
               autoComplete="current-password"
               value={password}
-              onChange={( e ) => setPassword( e.target.value )}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
               Sign In
             </Button>
             {/* <Button
@@ -151,5 +170,5 @@ export default function LogIn() {
         <Copyright sx={{ mt: 4 }} />
       </Container>
     </PageContainer>
-  )
+  );
 }

@@ -1,69 +1,90 @@
 import { useState } from "react";
 // import appwriteApi from "../api/api";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { register } from "../state/authSlice";
-import PageContainer from "./container/PageContainer";
-import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography, useTheme } from "@mui/material";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PageContainer from "./PageContainer";
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Copyright from "./copyright";
 
 const initFormData = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
 };
 
 export default function SignUp() {
-  const dispatch = useDispatch()
-  const theme = useTheme()
+  const dispatch = useDispatch();
+  const theme = useTheme();
   const navigate = useNavigate();
-  const [ searchParams ] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-  const [ formData, setFormData ] = useState( initFormData );
+  const [formData, setFormData] = useState(initFormData);
 
-  const onInputChange = ( e ) => setFormData( { ...formData, [ e.target.name ]: e.target.value } );
+  const onInputChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const toSignin = () => {
     const params = searchParams.toString();
-    navigate( `/auth/login?${params}` );
+    navigate(`/auth/login?${params}`);
   };
 
-  const handleSubmit = async ( e ) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ( formData.email.length === 0 || formData.password.length === 0 ) {
-      toast( 'eMail or Password can not be empty', { toastId: 'user-form-validation' } );
+    if (formData.email.length === 0 || formData.password.length === 0) {
+      toast("eMail or Password can not be empty", {
+        toastId: "user-form-validation",
+      });
       return;
     }
-    if ( formData.password.length !== formData.confirmPassword.length ) {
-      toast( 'Passwords did not match', { toastId: 'user-pwd-form-validation' } );
+    if (formData.password.length !== formData.confirmPassword.length) {
+      toast("Passwords did not match", { toastId: "user-pwd-form-validation" });
       return;
     }
 
-    const toastId = toast.loading( 'Signing up...', { toastId: 'signup-action' } );
+    const toastId = toast.loading("Signing up...", {
+      toastId: "signup-action",
+    });
     try {
-      const payload = await dispatch( register( { email: formData.email, password: formData.password, name: `${formData.firstName} ${formData.lastName}` } ) ).unwrap();
+      const payload = await dispatch(
+        register({
+          email: formData.email,
+          password: formData.password,
+          name: `${formData.firstName} ${formData.lastName}`,
+        })
+      ).unwrap();
       // dispatch( setUser( payload ) );
       // console.log( 'signup successful', payload )
-      toast.update( toastId, {
-        render: 'signup successful',
-        type: 'success',
+      toast.update(toastId, {
+        render: "signup successful",
+        type: "success",
         isLoading: false,
         autoClose: true,
-      } );
-      navigate( searchParams?.get( 'from' ) || '/dashboard' );
-    } catch ( error ) {
+      });
+      navigate(searchParams?.get("from") || "/dashboard");
+    } catch (error) {
       // console.error( 'signup failed', error );
-      toast.update( toastId, {
-        render: 'signup failed',
-        type: 'error',
+      toast.update(toastId, {
+        render: "signup failed",
+        type: "error",
         isLoading: false,
         autoClose: true,
-      } );
+      });
       // dispatch( setUser( null ) );
     }
   };
@@ -98,7 +119,12 @@ export default function SignUp() {
             Sign up
           </Typography>
 
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
