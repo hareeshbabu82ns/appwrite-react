@@ -31,7 +31,7 @@ export const todosApiSlice = api.injectEndpoints({
           url: `/databases/${Server.todosDB}/collections/${Server.todosCollection}/documents/${id}`,
         };
       },
-      providesTags: ["Todo"],
+      providesTags: (_, __, arg) => [{ type: "Todo", id: arg }],
     }),
     addTodo: builder.mutation({
       query: ({ data, documentId = "unique()", permissions }) => ({
@@ -47,7 +47,7 @@ export const todosApiSlice = api.injectEndpoints({
         method: "PATCH",
         body: { data },
       }),
-      invalidatesTags: ["Todos"],
+      invalidatesTags: (_, __, arg) => ["Todos", { type: "Todo", id: arg.id }],
     }),
     deleteTodo: builder.mutation({
       query: (id) => ({
